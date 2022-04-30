@@ -25,7 +25,6 @@ public class VoucherCommand implements CommandExecutor {
                     if (args.length == 0) return new ArrayList<>(commands.keySet());
                     return commands.keySet().stream()
                             .filter(it -> it.startsWith(args[0]))
-                            .map(it -> "/" + alias + " " + it)
                             .collect(Collectors.toList());
                 });
 
