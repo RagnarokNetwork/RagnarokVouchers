@@ -1,0 +1,7 @@
+name: RagnarokVouchers
+version: '${project.version}'
+main: net.ragnaroknetwork.vouchers.RagnarokVouchers
+authors: [ iSoham ]
+commands:
+  rvouchers:
+    description: The only command of this plugin.
