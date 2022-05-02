@@ -26,8 +26,8 @@ public class UseCommand extends Command {
     public UseCommand(RagnarokVouchers plugin) {
         super("use");
         setDescription("Uses a voucher");
-        setUsage("/rvoucher use");
-        setPermission("rvoucher.use");
+        setUsage("/rvouchers use");
+        setPermission("rvouchers.use");
         this.plugin = plugin;
         this.random = new Random();
     }
@@ -43,7 +43,7 @@ public class UseCommand extends Command {
 
         ItemStack item = player.getInventory().getItemInHand();
 
-        if(item == null) {
+        if (item == null || item.getType() == Material.AIR) {
             player.sendMessage(ChatColor.RED + "You have to hold a Voucher in your main hand for this command to work!");
             return true;
         }
@@ -72,25 +72,28 @@ public class UseCommand extends Command {
         List<String> permanentCommands = new ArrayList<>(voucher.permanentCommands());
         List<String> randomCommands = voucher.randomCommands();
 
-        if (!permanentCommands.get(0).equals("-")) {
-            if (!randomCommands.get(0).equals("-"))
-                permanentCommands.add(randomCommands.get(random.nextInt(randomCommands.size())));
-            dispatchCommands(permanentCommands, player, (success) -> {
-                if (!success) {
-                    player.sendMessage(ChatColor.RED + "Something went wrong, report to server admin! (Invalid Command)");
-                    throw new CommandException("Invalid command in key " + voucherId);
-                }
+        if (!permanentCommands.get(0).equals("-"))
+            permanentCommands.clear();
 
-                plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
-                        .put(voucherId, System.currentTimeMillis() + voucher.cooldown() * 1000L);
+        if (!randomCommands.get(0).equals("-"))
+            permanentCommands.add(randomCommands.get(random.nextInt(randomCommands.size())));
 
-                int amount = item.getAmount();
-                if (amount == 1)
-                    player.getInventory().setItemInHand(new ItemStack(Material.AIR));
-                else
-                    player.getInventory().getItemInHand().setAmount(amount - 1);
-            });
-        }
+        dispatchCommands(permanentCommands, player, (success) -> {
+            if (!success) {
+                player.sendMessage(ChatColor.RED + "Something went wrong, report to server admin! (Invalid Command)");
+                throw new CommandException("Invalid command in key " + voucherId);
+            }
+
+            plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
+                    .put(voucherId, System.currentTimeMillis() + voucher.cooldown() * 1000L);
+
+            int amount = item.getAmount();
+            if (amount == 1)
+                player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+            else
+                player.getInventory().getItemInHand().setAmount(amount - 1);
+            player.updateInventory();
+        });
 
         return true;
     }
