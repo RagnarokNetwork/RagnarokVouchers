@@ -43,8 +43,8 @@ public class GiveCommand extends Command {
         String target = len > 2 ? args[2] : sender.getName();
 
         if (amount == -1) {
-            amount = 1;
-            target = args[1];
+            sender.sendMessage(ChatColor.RED + "The amount should be a number (positive)!");
+            return true;
         }
 
         ItemStack voucher = getVoucher(voucherId, amount);

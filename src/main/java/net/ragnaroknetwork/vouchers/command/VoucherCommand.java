@@ -24,7 +24,15 @@ public class VoucherCommand implements CommandExecutor {
                 (CommandSender sender, Command command, String alias, String[] args) -> {
                     if (args.length == 0) return new ArrayList<>(commands.keySet());
                     if (args.length > 1) {
-                        if (args.length > 2) return new ArrayList<>();
+                        if (args.length > 2) {
+                            if (args.length > 3) {
+                                if (args[0].equalsIgnoreCase("give")) {
+                                    return null;
+                                }
+                            }
+
+                            return new ArrayList<>();
+                        }
                         if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("use")) {
                             return plugin.getPluginConfig().vouchers().keySet()
                                     .stream().filter(it -> it.startsWith(args[1].toLowerCase()))
