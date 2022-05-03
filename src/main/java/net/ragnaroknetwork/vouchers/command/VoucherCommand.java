@@ -16,10 +16,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VoucherCommand implements CommandExecutor {
-
+    private final RagnarokVouchers plugin;
     private final Map<String, Command> commands = new HashMap<>();
 
     public VoucherCommand(RagnarokVouchers plugin) {
+        this.plugin = plugin;
         plugin.getCommand("rvouchers").setTabCompleter(
                 (CommandSender sender, Command command, String alias, String[] args) -> {
                     if (args.length == 0) return new ArrayList<>(commands.keySet());
@@ -66,7 +67,8 @@ public class VoucherCommand implements CommandExecutor {
         Command subCommand = commands.get(args[0]);
 
         if (subCommand == null) {
-            sender.sendMessage(ChatColor.RED + "No command found for " + args[0]);
+            sender.sendMessage(plugin.getLang().commandNotFound().toString()
+                    .replace("{cmd}", args[0]));
             sendHelp(sender);
             return true;
         }
@@ -77,13 +79,13 @@ public class VoucherCommand implements CommandExecutor {
     }
 
     private void sendHelp(CommandSender sender) {
-        String commands = "Solar Credits Commands : \n" +
+        String commands = "Ragnarok Vouchers Commands : \n" +
                 this.commands.values().stream()
                         .filter(it -> it.testPermission(sender))
                         .map(it -> ChatColor.BOLD + it.getName() +
                                 ChatColor.RESET + " : " + it.getDescription())
                         .collect(Collectors.joining("\n")) +
-                "\n/vouchers <command>";
+                "\n/rvouchers <command>";
         sender.sendMessage(commands.split("\n"));
     }
 }

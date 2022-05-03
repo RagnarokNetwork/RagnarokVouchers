@@ -8,6 +8,7 @@ import space.arim.dazzleconf.ext.snakeyaml.CommentMode;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlConfigurationFactory;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlOptions;
 import space.arim.dazzleconf.helper.ConfigurationHelper;
+import space.arim.dazzleconf.sorter.AnnotationBasedSorter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,9 +34,13 @@ public final class ConfigManager<C> {
         SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder()
                 .commentMode(CommentMode.alternativeWriter()) // Enables writing YAML comments
                 .build();
+        ConfigurationOptions options = new ConfigurationOptions.Builder()
+                .addSerialiser(new ChatMessageSerializer())
+                .sorter(new AnnotationBasedSorter())
+                .build();
         ConfigurationFactory<C> configFactory = SnakeYamlConfigurationFactory.create(
                 configClass,
-                ConfigurationOptions.defaults(),
+                options,
                 yamlOptions);
         return new ConfigManager<>(logger, new ConfigurationHelper<>(configFolder, fileName, configFactory), configFolder.resolve(fileName));
     }

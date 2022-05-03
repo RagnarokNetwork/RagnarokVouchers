@@ -3,6 +3,7 @@ package net.ragnaroknetwork.vouchers.command.commands;
 import net.ragnaroknetwork.vouchers.RItemStack;
 import net.ragnaroknetwork.vouchers.RagnarokVouchers;
 import net.ragnaroknetwork.vouchers.config.Config;
+import net.ragnaroknetwork.vouchers.config.MessageConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -28,6 +29,7 @@ public class UseCommand extends Command {
         setDescription("Uses a voucher");
         setUsage("/rvouchers use");
         setPermission("rvouchers.use");
+        setPermissionMessage(plugin.getLang().noPermission().toString());
         this.plugin = plugin;
         this.random = new Random();
     }
@@ -39,34 +41,38 @@ public class UseCommand extends Command {
             return true;
         }
 
+        MessageConfig.UseConfig config = plugin.getLang().use();
+
         Player player = (Player) sender;
 
         ItemStack item = player.getInventory().getItemInHand();
 
         if (item == null || item.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "You have to hold a Voucher in your main hand for this command to work!");
+            player.sendMessage(config.voucherNotInMainHand().toString());
             return true;
         }
 
         RItemStack rItem = RItemStack.of(item);
 
         if (!rItem.isVoucher()) {
-            player.sendMessage(ChatColor.RED + "You have to hold a Voucher in your main hand for this command to work!");
+            player.sendMessage(config.voucherNotInMainHand().toString());
             return true;
         }
 
         String voucherId = rItem.getVoucherId();
         Config.Voucher voucher = plugin.getPluginConfig().vouchers().get(voucherId);
         if (!player.hasPermission(voucher.permission())) {
-            player.sendMessage(ChatColor.RED + "You do not have permission to use this voucher.");
+            player.sendMessage(config.noPermissionToClaimVoucher().toString());
             return true;
         }
 
-        if(!player.hasPermission("rvouchers.bypass-cooldown")) {
+        if (!player.hasPermission("rvouchers.bypass-cooldown")) {
             Long coolDownExpiry = plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
                     .getOrDefault(voucherId, System.currentTimeMillis());
             if (coolDownExpiry > System.currentTimeMillis()) {
-                player.sendMessage(ChatColor.RED + "You have to wait for " + getFormatted(coolDownExpiry - System.currentTimeMillis()));
+                player.sendMessage(config.playerOnCooldown().toString()
+                        .replace("time", getFormatted(coolDownExpiry - System.currentTimeMillis()))
+                );
                 return true;
             }
         }
@@ -82,7 +88,7 @@ public class UseCommand extends Command {
 
         dispatchCommands(permanentCommands, player, (success) -> {
             if (!success) {
-                player.sendMessage(ChatColor.RED + "Something went wrong, report to server admin! (Invalid Command)");
+                player.sendMessage(config.invalidCommand().toString());
                 throw new CommandException("Invalid command in key " + voucherId);
             }
 

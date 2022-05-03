@@ -3,6 +3,7 @@ package net.ragnaroknetwork.vouchers.command.commands;
 import net.ragnaroknetwork.vouchers.RItemStack;
 import net.ragnaroknetwork.vouchers.RagnarokVouchers;
 import net.ragnaroknetwork.vouchers.config.Config;
+import net.ragnaroknetwork.vouchers.config.MessageConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,19 +23,19 @@ public class GiveCommand extends Command {
         setDescription("Gives a voucher to a player");
         setUsage("/rvoucher give <voucher> [amount] [name]");
         setPermission("rvoucher.give");
+        setPermissionMessage(plugin.getLang().noPermission().toString());
         this.plugin = plugin;
     }
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+        MessageConfig.GiveConfig config = plugin.getLang().give();
+
         int len = args.length;
 
         if (len == 0) {
-            sender.sendMessage(new String[]{
-                    ChatColor.RED + "Specify the voucher id!",
-                    ChatColor.GOLD + "These are the vouchers : ",
-                    String.join(", ", plugin.getPluginConfig().vouchers().keySet())
-            });
+            sender.sendMessage(config.noVoucherId().toString()
+                    .replace("{vouchers}", String.join(", ", plugin.getPluginConfig().vouchers().keySet())));
             return true;
         }
 
@@ -43,36 +44,36 @@ public class GiveCommand extends Command {
         String target = len > 2 ? args[2] : sender.getName();
 
         if (amount == -1) {
-            sender.sendMessage(ChatColor.RED + "The amount should be a number (positive)!");
+            sender.sendMessage(config.invalidAmount().toString());
             return true;
         }
 
         ItemStack voucher = getVoucher(voucherId, amount);
 
         if (voucher == null) {
-            sender.sendMessage(ChatColor.RED + "Voucher with id " + voucherId + " doesn't exist!");
+            sender.sendMessage(config.voucherNotFound().toString());
             return true;
         }
 
         Player player = sender.getServer().getPlayer(target);
 
         if (player == null) {
-            sender.sendMessage(ChatColor.RED + "No player with name " + target + " found!");
+            sender.sendMessage(config.playerNotFound().toString()
+                    .replace("{player}", target));
             return true;
         }
 
         int firstEmpty = player.getInventory().firstEmpty();
 
         if (firstEmpty == -1) {
-            sender.sendMessage(ChatColor.RED + player.getName() + " doesn't have a empty slot!");
+            sender.sendMessage(config.noEmptySlot().toString()
+                    .replace("{player}", target));
             return true;
         }
 
         player.getInventory().addItem(voucher);
-        player.sendMessage(new String[]{
-                ChatColor.GREEN + "You got " + voucher.getItemMeta().getDisplayName() + ChatColor.GREEN + "!",
-                ChatColor.GOLD + "Check your inventory!"
-        });
+        player.sendMessage(config.rewardClaimed().toString()
+                .replace("{voucher}", voucher.getItemMeta().getDisplayName()));
 
         return true;
     }
