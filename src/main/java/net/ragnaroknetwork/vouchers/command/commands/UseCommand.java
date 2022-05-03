@@ -62,11 +62,13 @@ public class UseCommand extends Command {
             return true;
         }
 
-        Long coolDownExpiry = plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
-                .getOrDefault(voucherId, System.currentTimeMillis());
-        if (coolDownExpiry > System.currentTimeMillis()) {
-            player.sendMessage(ChatColor.RED + "You have to wait for " + getFormatted(coolDownExpiry - System.currentTimeMillis()));
-            return true;
+        if(!player.hasPermission("rvouchers.bypass-cooldown")) {
+            Long coolDownExpiry = plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
+                    .getOrDefault(voucherId, System.currentTimeMillis());
+            if (coolDownExpiry > System.currentTimeMillis()) {
+                player.sendMessage(ChatColor.RED + "You have to wait for " + getFormatted(coolDownExpiry - System.currentTimeMillis()));
+                return true;
+            }
         }
 
         List<String> permanentCommands = new ArrayList<>(voucher.permanentCommands());
