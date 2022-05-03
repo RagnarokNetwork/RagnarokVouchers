@@ -22,8 +22,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <id>in-project</id>
+            <url>file://${project.basedir}/libs</url>
         </repository>
     </repositories>
 
