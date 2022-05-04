@@ -7,6 +7,11 @@ import net.ragnaroknetwork.vouchers.config.MessageConfig;
 import net.ragnaroknetwork.vouchers.event.VoucherUseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +28,7 @@ public final class RagnarokVouchers extends JavaPlugin {
         // Config
         configManager = ConfigManager.create(getLogger(), getDataFolder().toPath(), "config.yml", Config.class);
         langManager = ConfigManager.create(getLogger(), getDataFolder().toPath(), "lang.yml", MessageConfig.class);
+        backupConfig();
         reloadPlugin();
 
         // Commands
@@ -51,5 +57,18 @@ public final class RagnarokVouchers extends JavaPlugin {
 
     public Map<UUID, Map<String, Long>> getCoolDowns() {
         return coolDowns;
+    }
+
+    private void backupConfig() {
+        Path dataFolder = getDataFolder().toPath();
+        Path file = dataFolder.resolve("config");
+        Path backup = dataFolder.resolve("config.backup.yml");
+
+        try {
+            Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
+            getLogger().info("config backup Complete!");
+        } catch (IOException e) {
+            throw new UncheckedIOException("Config Backup couldn't be created!!", e);
+        }
     }
 }
