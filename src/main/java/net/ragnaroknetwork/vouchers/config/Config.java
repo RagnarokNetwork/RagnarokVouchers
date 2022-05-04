@@ -54,15 +54,20 @@ public interface Config {
         String permission();
 
         @Order(7)
-        @ConfKey("perm-commands")
-        @ConfDefault.DefaultStrings("-")
-        @ConfComments({"The commands which will executed after using the voucher.", "Use '-' if you want none"})
-        List<String> permanentCommands();
+        @ConfKey("blacklist-permission")
+        @ConfDefault.DefaultString("none")
+        String blacklistPermission();
 
         @Order(8)
+        @ConfKey("perm-commands")
+        @ConfDefault.DefaultStrings("none")
+        @ConfComments({"The commands which will executed after using the voucher.", "Use 'none' if you want none"})
+        List<String> permanentCommands();
+
+        @Order(9)
         @ConfKey("rand-commands")
-        @ConfDefault.DefaultStrings({"give @p diamond 5", "give @p diamond 10", "give @p diamond 25"})
-        @ConfComments({"A random command from these will be executed after using the voucher.", "Use '-' if you want none"})
+        @ConfDefault.DefaultStrings("none")
+        @ConfComments({"A random command from these will be executed after using the voucher.", "Use 'none' if you want none"})
         List<String> randomCommands();
     }
 }

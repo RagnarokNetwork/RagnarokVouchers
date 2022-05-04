@@ -61,6 +61,12 @@ public class UseCommand extends Command {
 
         String voucherId = rItem.getVoucherId();
         Config.Voucher voucher = plugin.getPluginConfig().vouchers().get(voucherId);
+
+        if(player.hasPermission(voucher.blacklistPermission())) {
+            player.sendMessage(config.hasBlacklistPermission().toString());
+            return true;
+        }
+
         if (!player.hasPermission(voucher.permission())) {
             player.sendMessage(config.noPermissionToClaimVoucher().toString());
             return true;
@@ -80,10 +86,10 @@ public class UseCommand extends Command {
         List<String> permanentCommands = new ArrayList<>(voucher.permanentCommands());
         List<String> randomCommands = voucher.randomCommands();
 
-        if (!permanentCommands.get(0).equals("-"))
+        if (!permanentCommands.get(0).equals("none"))
             permanentCommands.clear();
 
-        if (!randomCommands.get(0).equals("-"))
+        if (!randomCommands.get(0).equals("none"))
             permanentCommands.add(randomCommands.get(random.nextInt(randomCommands.size())));
 
         dispatchCommands(permanentCommands, player, (success) -> {

@@ -22,8 +22,9 @@ public class VoucherUseEvent implements Listener {
             if (itemInHand == null || itemInHand.getType() == Material.AIR)
                 return;
 
-            if (RItemStack.of(itemInHand).isVoucher())
-                player.performCommand("rvouchers use");
+            RItemStack item = RItemStack.of(itemInHand);
+            if (item.isVoucher())
+                player.performCommand("rvouchers use " + item.getVoucherId());
         }
     }
 }

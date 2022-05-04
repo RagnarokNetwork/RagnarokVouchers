@@ -39,11 +39,16 @@ public interface MessageConfig {
         ChatMessage noPermissionToClaimVoucher();
 
         @Order(3)
+        @ConfKey("has-blacklist-permission")
+        @ConfDefault.DefaultString("&cYou have already claimed this voucher!")
+        ChatMessage hasBlacklistPermission();
+
+        @Order(4)
         @ConfKey("player-on-cooldown")
         @ConfDefault.DefaultString("&6You have to wait for {time} to claim this voucher!")
         ChatMessage playerOnCooldown();
 
-        @Order(4)
+        @Order(5)
         @ConfKey("invalid-command")
         @ConfComments("If the command in the config is invalid")
         @ConfDefault.DefaultString("&cSomething went wrong, report to server admin! (Invalid Command)")
