@@ -62,7 +62,10 @@ public class UseCommand extends Command {
         String voucherId = rItem.getVoucherId();
         Config.Voucher voucher = plugin.getPluginConfig().vouchers().get(voucherId);
 
-        if(player.hasPermission(voucher.blacklistPermission())) {
+        String blacklistPermission = voucher.blacklistPermission();
+        if (!player.isOp() &&
+                !blacklistPermission.equalsIgnoreCase("none") &&
+                player.hasPermission(blacklistPermission)) {
             player.sendMessage(config.hasBlacklistPermission().toString());
             return true;
         }
