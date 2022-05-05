@@ -65,8 +65,10 @@ public final class RagnarokVouchers extends JavaPlugin {
         Path backup = dataFolder.resolve("config.backup.yml");
 
         try {
-            Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
-            getLogger().info("config backup Complete!");
+            if (file.toFile().exists()) {
+                Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
+                getLogger().info("config backup Complete!");
+            }
         } catch (IOException e) {
             throw new UncheckedIOException("Config Backup couldn't be created!!", e);
         }
