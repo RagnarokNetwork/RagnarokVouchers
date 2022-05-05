@@ -81,7 +81,7 @@ public class VoucherCommand implements CommandExecutor {
     private void sendHelp(CommandSender sender) {
         String commands = "Ragnarok Vouchers Commands : \n" +
                 this.commands.values().stream()
-                        .filter(it -> it.testPermission(sender))
+                        .filter(it -> it.testPermissionSilent(sender))
                         .map(it -> ChatColor.BOLD + it.getName() +
                                 ChatColor.RESET + " : " + it.getDescription())
                         .collect(Collectors.joining("\n")) +

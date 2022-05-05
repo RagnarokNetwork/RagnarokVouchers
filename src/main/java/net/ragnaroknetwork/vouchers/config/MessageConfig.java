@@ -82,8 +82,8 @@ public interface MessageConfig {
         ChatMessage noEmptySlot();
 
         @Order(6)
-        @ConfKey("reward-claimed")
-        @ConfDefault.DefaultString("&aYou claimed {voucher}!")
-        ChatMessage rewardClaimed();
+        @ConfKey("reward-given")
+        @ConfDefault.DefaultString("&aYou got {voucher}!")
+        ChatMessage rewardGiven();
     }
 }

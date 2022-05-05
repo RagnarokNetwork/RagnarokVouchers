@@ -70,7 +70,7 @@ public class UseCommand extends Command {
             return true;
         }
 
-        if (!player.hasPermission(voucher.permission())) {
+        if (! player.hasPermission(voucher.permission())) {
             player.sendMessage(config.noPermissionToClaimVoucher().toString());
             return true;
         }
@@ -80,7 +80,7 @@ public class UseCommand extends Command {
                     .getOrDefault(voucherId, System.currentTimeMillis());
             if (coolDownExpiry > System.currentTimeMillis()) {
                 player.sendMessage(config.playerOnCooldown().toString()
-                        .replace("time", getFormatted(coolDownExpiry - System.currentTimeMillis()))
+                        .replace("{time}", getFormatted(coolDownExpiry - System.currentTimeMillis()))
                 );
                 return true;
             }

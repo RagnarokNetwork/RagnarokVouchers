@@ -72,7 +72,7 @@ public class GiveCommand extends Command {
         }
 
         player.getInventory().addItem(voucher);
-        player.sendMessage(config.rewardClaimed().toString()
+        player.sendMessage(config.rewardGiven().toString()
                 .replace("{voucher}", voucher.getItemMeta().getDisplayName()));
 
         return true;
