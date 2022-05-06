@@ -5,6 +5,7 @@ import net.ragnaroknetwork.vouchers.RagnarokVouchers;
 import net.ragnaroknetwork.vouchers.config.Config;
 import net.ragnaroknetwork.vouchers.config.MessageConfig;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -13,6 +14,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GiveCommand extends Command {
@@ -48,13 +52,6 @@ public class GiveCommand extends Command {
             return true;
         }
 
-        ItemStack voucher = getVoucher(voucherId, amount);
-
-        if (voucher == null) {
-            sender.sendMessage(config.voucherNotFound().toString());
-            return true;
-        }
-
         Player player = sender.getServer().getPlayer(target);
 
         if (player == null) {
@@ -63,29 +60,42 @@ public class GiveCommand extends Command {
             return true;
         }
 
-        int firstEmpty = player.getInventory().firstEmpty();
+        List<ItemStack> vouchers = getVouchers(voucherId, amount);
+
+        if (vouchers == null) {
+            sender.sendMessage(config.voucherNotFound().toString());
+            return true;
+        }
+
+        /*int firstEmpty = player.getInventory().firstEmpty();
 
         if (firstEmpty == -1) {
             sender.sendMessage(config.noEmptySlot().toString()
                     .replace("{player}", target));
             return true;
-        }
+        }*/
 
-        player.getInventory().addItem(voucher);
+        vouchers.forEach(it -> {
+            if (player.getInventory().firstEmpty() != -1)
+                player.getInventory().addItem(it);
+            else {
+                World world = player.getWorld();
+                world.dropItem(player.getLocation(), it);
+            }
+        });
+
         player.sendMessage(config.rewardGiven().toString()
-                .replace("{voucher}", voucher.getItemMeta().getDisplayName()));
+                .replace("{voucher}", vouchers.get(0).getItemMeta().getDisplayName()));
 
         return true;
     }
 
-    private ItemStack getVoucher(String id, int amount) {
-        amount = Math.min(amount, 64);
-
+    private List<ItemStack> getVouchers(String id, int amount) {
         Config.Voucher voucher = plugin.getPluginConfig().vouchers().get(id);
         if (voucher == null)
             return null;
 
-        ItemStack item = new ItemStack(voucher.material(), amount);
+        ItemStack item = new ItemStack(voucher.material(), 64);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', voucher.displayName()));
@@ -95,12 +105,20 @@ public class GiveCommand extends Command {
 
         if (voucher.enchantmentGlow()) {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             meta.addEnchant(Enchantment.LUCK, 1, false);
         }
         item.setItemMeta(meta);
 
-        return RItemStack.of(item).asVoucher(id);
+        List<ItemStack> vouchers = new ArrayList<>(Collections.nCopies(amount / 64, RItemStack.of(item).asVoucher(id)));
+
+        int lastStackAmount = amount % 64;
+        if (lastStackAmount > 0) {
+            ItemStack lastStack = RItemStack.of(item).asVoucher(id);
+            lastStack.setAmount(lastStackAmount);
+            vouchers.add(lastStack);
+        }
+
+        return vouchers;
     }
 
     private int parseInt(String num) {
