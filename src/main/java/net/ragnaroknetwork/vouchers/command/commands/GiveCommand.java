@@ -1,10 +1,10 @@
 package net.ragnaroknetwork.vouchers.command.commands;
 
+import net.ragnaroknetwork.vouchers.ChatMessage;
 import net.ragnaroknetwork.vouchers.RItemStack;
 import net.ragnaroknetwork.vouchers.RagnarokVouchers;
 import net.ragnaroknetwork.vouchers.config.Config;
 import net.ragnaroknetwork.vouchers.config.MessageConfig;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -112,9 +112,9 @@ public class GiveCommand extends Command {
         ItemStack item = new ItemStack(voucher.material(), 64);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', voucher.displayName()));
+        meta.setDisplayName(voucher.displayName().toString());
         meta.setLore(voucher.lore().stream()
-                .map(it -> ChatColor.translateAlternateColorCodes('&', it))
+                .map(ChatMessage::toString)
                 .collect(Collectors.toList()));
 
         if (voucher.enchantmentGlow()) {

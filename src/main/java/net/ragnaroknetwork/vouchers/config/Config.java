@@ -1,5 +1,6 @@
 package net.ragnaroknetwork.vouchers.config;
 
+import net.ragnaroknetwork.vouchers.ChatMessage;
 import org.bukkit.Material;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault;
@@ -36,12 +37,12 @@ public interface Config {
         @Order(2)
         @ConfKey("display-name")
         @ConfDefault.DefaultString("&aSword")
-        String displayName();
+        ChatMessage displayName();
 
         @Order(3)
         @ConfKey("lore")
         @ConfDefault.DefaultStrings("A really op sword")
-        List<String> lore();
+        List<ChatMessage> lore();
 
         @Order(4)
         @ConfKey("enchantment-glow")
