@@ -85,5 +85,15 @@ public interface MessageConfig {
         @ConfKey("reward-given")
         @ConfDefault.DefaultString("&aYou got {voucher}!")
         ChatMessage rewardGiven();
+
+        @Order(7)
+        @ConfKey("vouchers-given")
+        @ConfDefault.DefaultString("&a{player} was given {amount} vouchers.")
+        ChatMessage vouchersGiven();
+
+        @Order(8)
+        @ConfKey("vouchers-not-dropped")
+        @ConfDefault.DefaultString("&c{amount} vouchers could not be given because the player's inventory was full.")
+        ChatMessage vouchersNotDropped();
     }
 }

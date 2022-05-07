@@ -67,25 +67,39 @@ public class GiveCommand extends Command {
             return true;
         }
 
-        /*int firstEmpty = player.getInventory().firstEmpty();
+        boolean dropVouchers = plugin.getPluginConfig().dropVouchers();
+        if (!dropVouchers) {
+            int firstEmpty = player.getInventory().firstEmpty();
 
-        if (firstEmpty == -1) {
-            sender.sendMessage(config.noEmptySlot().toString()
-                    .replace("{player}", target));
-            return true;
-        }*/
+            if (firstEmpty == -1) {
+                sender.sendMessage(config.noEmptySlot().toString()
+                        .replace("{player}", target));
+                return true;
+            }
+        }
 
-        vouchers.forEach(it -> {
+        int amountGiven = 0;
+        for (ItemStack it : vouchers) {
             if (player.getInventory().firstEmpty() != -1)
                 player.getInventory().addItem(it);
             else {
-                World world = player.getWorld();
-                world.dropItem(player.getLocation(), it);
+                if (dropVouchers) {
+                    World world = player.getWorld();
+                    world.dropItem(player.getLocation(), it);
+                } else {
+                    sender.sendMessage(config.vouchersNotDropped().toString()
+                            .replace("{amount}", String.valueOf(amount - amountGiven)));
+                    break;
+                }
             }
-        });
+            amountGiven += it.getAmount();
+        }
 
         player.sendMessage(config.rewardGiven().toString()
                 .replace("{voucher}", vouchers.get(0).getItemMeta().getDisplayName()));
+        sender.sendMessage(config.vouchersGiven().toString()
+                .replace("{player}", player.getName())
+                .replace("{amount}", String.valueOf(amountGiven)));
 
         return true;
     }

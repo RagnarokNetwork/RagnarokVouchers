@@ -17,6 +17,11 @@ public interface Config {
         return Collections.singletonMap("default", defaultConfig);
     }
 
+    @ConfKey("drop-vouchers")
+    @ConfDefault.DefaultBoolean(true)
+    @ConfComments("Drops the vouchers if inventory is full")
+    boolean dropVouchers();
+
     @ConfKey("vouchers")
     @ConfDefault.DefaultObject("defaultVouchers")
     Map<String, @SubSection Voucher> vouchers();
