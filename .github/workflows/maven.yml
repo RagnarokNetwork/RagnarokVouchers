@@ -27,3 +27,10 @@ jobs:
         
     - name: Build with Maven
       run: mvn clean -B -U verify
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: vouchers-jar
+        path: target/vouchers.jar
+        if-no-files-found: error
