@@ -98,7 +98,7 @@ public class UseCommand extends Command {
         dispatchCommands(permanentCommands, player, (success) -> {
             if (!success) {
                 player.sendMessage(config.invalidCommand().toString());
-                throw new CommandException("Invalid command in key " + voucherId);
+                return;
             }
 
             plugin.getCoolDowns().computeIfAbsent(player.getUniqueId(), uuid -> new HashMap<>())
@@ -130,6 +130,7 @@ public class UseCommand extends Command {
                     success.accept(true);
                 } catch (CommandException e) {
                     success.accept(false);
+                    e.printStackTrace();
                 }
             }
         }.runTask(plugin);
