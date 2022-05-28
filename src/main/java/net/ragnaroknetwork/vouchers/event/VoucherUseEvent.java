@@ -13,18 +13,24 @@ public class VoucherUseEvent implements Listener {
 
     @EventHandler
     public void onPlayerUseVoucher(PlayerInteractEvent event) {
+        System.out.println("Player Interact Event triggered");
         Action action = event.getAction();
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+            System.out.println("Right Click Action took place");
             Player player = event.getPlayer();
 
-            ItemStack itemInHand = player.getInventory().getItemInHand();
+            ItemStack itemInHand = event.getItem();
 
             if (itemInHand == null || itemInHand.getType() == Material.AIR)
                 return;
+            System.out.println("Item in hand is not null or air");
 
             RItemStack item = RItemStack.of(itemInHand);
-            if (item.isVoucher())
+            if (item.isVoucher()) {
+                System.out.println("Item in hand is voucher");
                 player.performCommand("rvouchers use " + item.getVoucherId());
+                System.out.println("voucher used");
+            }
         }
     }
 }
