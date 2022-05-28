@@ -29,7 +29,7 @@ public class VoucherUseEvent implements Listener {
             if (item.isVoucher()) {
                 System.out.println("Item in hand is voucher");
                 player.performCommand("rvouchers use " + item.getVoucherId());
-                System.out.println("voucher used");
+                System.out.println(item.getVoucherId() + "voucher used");
             }
         }
     }
