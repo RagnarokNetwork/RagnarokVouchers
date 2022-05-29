@@ -86,16 +86,17 @@ public class UseCommand extends Command {
             }
         }
 
-        List<String> permanentCommands = new ArrayList<>(voucher.permanentCommands());
+        List<String> commands = new ArrayList<>(voucher.permanentCommands());
         List<String> randomCommands = voucher.randomCommands();
 
-        if (!permanentCommands.get(0).equals("none"))
-            permanentCommands.clear();
+        if (commands.isEmpty() 
+                || commands.get(0).equals("none"))
+            commands.clear();
 
         if (!randomCommands.get(0).equals("none"))
-            permanentCommands.add(randomCommands.get(random.nextInt(randomCommands.size())));
+            commands.add(randomCommands.get(random.nextInt(randomCommands.size())));
 
-        dispatchCommands(permanentCommands, player, (success) -> {
+        dispatchCommands(commands, player, (success) -> {
             if (!success) {
                 player.sendMessage(config.invalidCommand().toString());
                 return;
