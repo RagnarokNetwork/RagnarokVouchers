@@ -70,7 +70,7 @@ public class UseCommand extends Command {
             return true;
         }
 
-        if (! player.hasPermission(voucher.permission())) {
+        if (!player.hasPermission(voucher.permission())) {
             player.sendMessage(config.noPermissionToClaimVoucher().toString());
             return true;
         }
@@ -89,11 +89,7 @@ public class UseCommand extends Command {
         List<String> commands = new ArrayList<>(voucher.permanentCommands());
         List<String> randomCommands = voucher.randomCommands();
 
-        if (commands.isEmpty() 
-                || commands.get(0).equals("none"))
-            commands.clear();
-
-        if (!randomCommands.get(0).equals("none"))
+        if (!randomCommands.isEmpty())
             commands.add(randomCommands.get(random.nextInt(randomCommands.size())));
 
         dispatchCommands(commands, player, (success) -> {

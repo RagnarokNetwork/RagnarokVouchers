@@ -66,13 +66,13 @@ public interface Config {
 
         @Order(8)
         @ConfKey("perm-commands")
-        @ConfDefault.DefaultStrings("none")
+        @ConfDefault.DefaultStrings({})
         @ConfComments({"The commands which will executed after using the voucher.", "Use 'none' if you want none"})
         List<String> permanentCommands();
 
         @Order(9)
         @ConfKey("rand-commands")
-        @ConfDefault.DefaultStrings("none")
+        @ConfDefault.DefaultStrings({})
         @ConfComments({"A random command from these will be executed after using the voucher.", "Use 'none' if you want none"})
         List<String> randomCommands();
     }
