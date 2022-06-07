@@ -35,7 +35,7 @@ public final class RagnarokVouchers extends JavaPlugin {
         getCommand("rvouchers").setExecutor(new VoucherCommand(this));
 
         // Events
-        getServer().getPluginManager().registerEvents(new VoucherUseEvent(), this);
+        getServer().getPluginManager().registerEvents(new VoucherUseEvent(this), this);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.ragnaroknetwork.vouchers.command.commands;
 
 import net.ragnaroknetwork.vouchers.RItemStack;
 import net.ragnaroknetwork.vouchers.RagnarokVouchers;
+import net.ragnaroknetwork.vouchers.Utils;
 import net.ragnaroknetwork.vouchers.config.Config;
 import net.ragnaroknetwork.vouchers.config.MessageConfig;
 import org.bukkit.ChatColor;
@@ -86,7 +87,7 @@ public class UseCommand extends Command {
                     .getOrDefault(voucherId, System.currentTimeMillis());
             if (coolDownExpiry > System.currentTimeMillis()) {
                 player.sendMessage(config.playerOnCooldown().toString()
-                        .replace("{time}", getFormatted(coolDownExpiry - System.currentTimeMillis()))
+                        .replace("{time}", Utils.getFormatted(coolDownExpiry - System.currentTimeMillis()))
                 );
                 return true;
             }
@@ -137,25 +138,5 @@ public class UseCommand extends Command {
                 }
             }
         }.runTask(plugin);
-    }
-
-    public String getFormatted(long milliseconds) {
-        long seconds = (milliseconds / 1000) % 60;
-        long minutes = (milliseconds / (1000 * 60)) % 60;
-        long hours = (milliseconds / (1000 * 60 * 60)) % 24;
-
-        StringBuilder builder = new StringBuilder();
-        if (milliseconds < 1000) {
-            return milliseconds + " ms";
-        } else {
-            if (hours > 0)
-                builder.append(hours).append(" H ");
-            if (minutes > 0)
-                builder.append(minutes).append(" M ");
-            if (seconds > 0)
-                builder.append(seconds).append(" S ");
-        }
-
-        return builder.toString();
     }
 }
