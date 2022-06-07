@@ -43,6 +43,11 @@ public class UseCommand extends Command {
 
         MessageConfig.UseConfig config = plugin.getLang().use();
 
+        if (args[0] == null) {
+            sender.sendMessage(config.voucherNotSpecified().toString());
+            return true;
+        }
+
         Player player = (Player) sender;
 
         ItemStack item = player.getInventory().getItemInHand();

@@ -28,6 +28,12 @@ public interface MessageConfig {
     @SubSection GiveConfig give();
 
     interface UseConfig {
+        @Order(0)
+        @ConfKey("voucher-not-specified")
+        @ConfDefault.DefaultString("&cRight click the voucher instead of using this command!")
+        ChatMessage voucherNotSpecified();
+
+
         @Order(1)
         @ConfKey("voucher-not-in-main-hand")
         @ConfDefault.DefaultString("&cYou have to hold a Voucher in your hand!")
