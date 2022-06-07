@@ -74,7 +74,9 @@ public class UseCommand extends Command {
             return true;
         }
 
-        if (!player.hasPermission(voucher.permission())) {
+        String voucherPermission = voucher.permission();
+        if (!voucherPermission.equals("none")
+                && !player.hasPermission(voucherPermission)) {
             player.sendMessage(config.noPermissionToClaimVoucher().toString());
             return true;
         }
