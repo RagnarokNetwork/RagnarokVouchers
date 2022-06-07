@@ -43,28 +43,27 @@ public class UseCommand extends Command {
 
         MessageConfig.UseConfig config = plugin.getLang().use();
 
-        if (args[0] == null) {
-            sender.sendMessage(config.voucherNotSpecified().toString());
-            return true;
-        }
-
         Player player = (Player) sender;
 
         ItemStack item = player.getInventory().getItemInHand();
+        RItemStack rItem = RItemStack.of(item);
+        String voucherId = rItem.getVoucherId();
+
+        if (args.length == 0 || !args[0].equals(voucherId)) {
+            sender.sendMessage(config.voucherNotSpecified().toString());
+            return true;
+        }
 
         if (item == null || item.getType() == Material.AIR) {
             player.sendMessage(config.voucherNotInMainHand().toString());
             return true;
         }
 
-        RItemStack rItem = RItemStack.of(item);
-
         if (!rItem.isVoucher()) {
             player.sendMessage(config.voucherNotInMainHand().toString());
             return true;
         }
 
-        String voucherId = rItem.getVoucherId();
         Config.Voucher voucher = plugin.getPluginConfig().vouchers().get(voucherId);
 
         String blacklistPermission = voucher.blacklistPermission();
