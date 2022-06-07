@@ -48,12 +48,6 @@ public class UseCommand extends Command {
 
         ItemStack item = player.getInventory().getItemInHand();
         RItemStack rItem = RItemStack.of(item);
-        String voucherId = rItem.getVoucherId();
-
-        if (args.length == 0 || !args[0].equals(voucherId)) {
-            sender.sendMessage(config.voucherNotSpecified().toString());
-            return true;
-        }
 
         if (item == null || item.getType() == Material.AIR) {
             player.sendMessage(config.voucherNotInMainHand().toString());
@@ -62,6 +56,13 @@ public class UseCommand extends Command {
 
         if (!rItem.isVoucher()) {
             player.sendMessage(config.voucherNotInMainHand().toString());
+            return true;
+        }
+
+        String voucherId = rItem.getVoucherId();
+
+        if (args.length == 0 || !args[0].equals(voucherId)) {
+            sender.sendMessage(config.voucherNotSpecified().toString());
             return true;
         }
 
