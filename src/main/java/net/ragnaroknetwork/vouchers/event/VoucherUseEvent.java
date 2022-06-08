@@ -45,7 +45,6 @@ public class VoucherUseEvent implements Listener {
                     }
                 }
 
-
                 player.performCommand("rvouchers use " + item.getVoucherId());
             }
         }

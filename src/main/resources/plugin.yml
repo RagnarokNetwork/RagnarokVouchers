@@ -3,5 +3,5 @@ version: '${project.version}'
 main: net.ragnaroknetwork.vouchers.RagnarokVouchers
 authors: [ iSoham ]
 commands:
-  rvouchers:
+  vouchers:
     description: The only command of this plugin.
