@@ -9,11 +9,11 @@ public class Utils {
         StringBuilder builder = new StringBuilder();
 
         if (hours > 0)
-            builder.append(hours).append(" H ");
+            builder.append(hours).append(" h ");
         if (minutes > 0)
-            builder.append(minutes).append(" M ");
+            builder.append(minutes).append(" m ");
         if (seconds > 0)
-            builder.append(seconds).append(" S ");
+            builder.append(seconds).append(" s ");
 
         return builder.toString();
     }
