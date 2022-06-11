@@ -1,5 +1,6 @@
 package net.ragnaroknetwork.vouchers.command.commands;
 
+import net.ragnaroknetwork.vouchers.ChatMessage;
 import net.ragnaroknetwork.vouchers.RItemStack;
 import net.ragnaroknetwork.vouchers.RagnarokVouchers;
 import net.ragnaroknetwork.vouchers.Utils;
@@ -115,6 +116,9 @@ public class UseCommand extends Command {
             else
                 player.getInventory().getItemInHand().setAmount(amount - 1);
             player.updateInventory();
+            player.sendMessage(voucher.messages().stream()
+                    .map(ChatMessage::toString)
+                    .toArray(String[]::new));
         });
 
         return true;

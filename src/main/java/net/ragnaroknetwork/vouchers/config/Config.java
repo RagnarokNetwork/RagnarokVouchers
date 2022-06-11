@@ -75,5 +75,11 @@ public interface Config {
         @ConfDefault.DefaultStrings({})
         @ConfComments({"A random command from these will be executed after using the voucher.", "Use 'none' if you want none"})
         List<String> randomCommands();
+
+        @Order(10)
+        @ConfKey("messages")
+        @ConfDefault.DefaultStrings({})
+        @ConfComments({"Messages sent after voucher is used.", "Leave empty if none should be sent."})
+        List<ChatMessage> messages();
     }
 }
