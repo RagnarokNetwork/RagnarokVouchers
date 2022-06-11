@@ -21,7 +21,7 @@ public class VoucherCommand implements CommandExecutor {
 
     public VoucherCommand(RagnarokVouchers plugin) {
         this.plugin = plugin;
-        plugin.getCommand("rvouchers").setTabCompleter(
+        plugin.getCommand("xvouchers").setTabCompleter(
                 (CommandSender sender, Command command, String alias, String[] args) -> {
                     if (args.length == 0) return new ArrayList<>(commands.keySet());
                     if (args.length > 1) {
