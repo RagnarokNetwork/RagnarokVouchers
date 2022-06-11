@@ -7,16 +7,13 @@ public class Utils {
         long hours = (milliseconds / (1000 * 60 * 60)) % 24;
 
         StringBuilder builder = new StringBuilder();
-        if (milliseconds < 1000) {
-            return milliseconds + " ms";
-        } else {
-            if (hours > 0)
-                builder.append(hours).append(" H ");
-            if (minutes > 0)
-                builder.append(minutes).append(" M ");
-            if (seconds > 0)
-                builder.append(seconds).append(" S ");
-        }
+
+        if (hours > 0)
+            builder.append(hours).append(" H ");
+        if (minutes > 0)
+            builder.append(minutes).append(" M ");
+        if (seconds > 0)
+            builder.append(seconds).append(" S ");
 
         return builder.toString();
     }
