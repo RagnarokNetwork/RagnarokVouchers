@@ -6,45 +6,18 @@ import net.ragnaroknetwork.vouchers.command.commands.ReloadCommand;
 import net.ragnaroknetwork.vouchers.command.commands.UseCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class VoucherCommand implements CommandExecutor {
+public class VoucherCommand implements TabExecutor {
     private final RagnarokVouchers plugin;
     private final Map<String, Command> commands = new HashMap<>();
 
     public VoucherCommand(RagnarokVouchers plugin) {
         this.plugin = plugin;
-        plugin.getCommand("xvouchers").setTabCompleter(
-                (CommandSender sender, Command command, String alias, String[] args) -> {
-                    if (args.length == 0) return new ArrayList<>(commands.keySet());
-                    if (args.length > 1) {
-                        if (args.length > 2) {
-                            if (args.length > 3) {
-                                if (args[0].equalsIgnoreCase("give")) {
-                                    return null;
-                                }
-                            }
-
-                            return new ArrayList<>();
-                        }
-                        if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("use")) {
-                            return plugin.getPluginConfig().vouchers().keySet()
-                                    .stream().filter(it -> it.startsWith(args[1].toLowerCase()))
-                                    .collect(Collectors.toList());
-                        }
-                        return new ArrayList<>();
-                    }
-                    return commands.keySet().stream()
-                            .filter(it -> it.startsWith(args[0].toLowerCase()))
-                            .collect(Collectors.toList());
-                });
 
         addCommand(new ReloadCommand(plugin));
         addCommand(new GiveCommand(plugin));
@@ -87,5 +60,30 @@ public class VoucherCommand implements CommandExecutor {
                         .collect(Collectors.joining("\n")) +
                 "\n/rvouchers <command>";
         sender.sendMessage(commands.split("\n"));
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 0) return new ArrayList<>(commands.keySet());
+        if (args.length > 1) {
+            if (args.length > 2) {
+                if (args.length > 3) {
+                    if (args[0].equalsIgnoreCase("give")) {
+                        return null;
+                    }
+                }
+
+                return new ArrayList<>();
+            }
+            if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("use")) {
+                return plugin.getPluginConfig().vouchers().keySet()
+                        .stream().filter(it -> it.startsWith(args[1].toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+            return new ArrayList<>();
+        }
+        return commands.keySet().stream()
+                .filter(it -> it.startsWith(args[0].toLowerCase()))
+                .collect(Collectors.toList());
     }
 }
